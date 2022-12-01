@@ -102,9 +102,10 @@ def affiche_groupe():
     for i in cursor:
         print(i[0], i[1], i[2])
 
-#crea_groupes()
-#recup_mail()
-affiche_groupe()
-
 cursor.close()
 bdd.close()
+
+if __name__ == '__main__':
+    crea_groupes()
+    recup_mail()
+    affiche_groupe()
