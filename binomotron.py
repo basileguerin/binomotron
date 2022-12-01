@@ -107,6 +107,8 @@ def affiche_groupe():
 cursor.close()
 bdd.close()
 
+#TEST GITHUB
+
 if __name__ == '__main__':
     crea_groupes()
     recup_mail()
