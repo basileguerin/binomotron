@@ -17,7 +17,7 @@ def crea_groupes():
     date = input("Quelle est la date (AAAAMMJJ) du jour ? : ")
 
     #On récupère la liste des apprenants de la BDD
-    query = "SELECT nom_apprenant, prenom_apprenant FROM liste_apprenants" 
+    query = "SELECT nom_apprenant, prenom_apprenant FROM liste_apprenants"
     cursor.execute(query)
 
     #On l'insère dans la liste vide
@@ -36,7 +36,7 @@ def crea_groupes():
     x = len(shuffle)
 
     #On demande à l'utilisateur combien d'élèves par groupe
-    nbraw = input("Combien d'étudiants par groupe ? ")  
+    nbraw = input("Combien d'étudiants par groupe ? ")
     nb = int(nbraw)
 
     #On remplit la liste binômes
@@ -44,20 +44,20 @@ def crea_groupes():
         for i in range(0, len(shuffle), nb):
             binome = shuffle[i:i+nb]
             binomes.append(binome)
-    else : 
+    else :
         print("Pas assez d'étudiants pour faire des groupes de cette taille")
         crea_groupes()
 
     #Si il y a un étudiant seul on l'ajoute à un groupe
     for binome in binomes:
-        if(len(binome)==1):
+        if len(binome)==1:
             ans = input("Il y a un étudiant seul. L'affecter à un groupe ? [y/n] ")
-            if(ans == 'y'):
+            if ans == 'y':
                 binomes[0].append(binome[0])
                 binomes.remove(binome)
 
     #On transforme la liste binomes en dictionnaire
-    dico = {k:v for k,v in enumerate(binomes)}
+    dico = dict(enumerate(binomes))
 
     #On stocke les groupes dans la BDD
     n_groupe = 1
@@ -69,14 +69,16 @@ def crea_groupes():
             id_groupe = i[0]
         for j in range(len(groupe)):
             apprenant = groupe[j]
-            query2 = f"SELECT id_apprenant FROM liste_apprenants WHERE (nom_apprenant, prenom_apprenant) = {apprenant}"
+            query2 = f"""SELECT id_apprenant FROM liste_apprenants
+            WHERE (nom_apprenant, prenom_apprenant) = {apprenant}"""
             cursor.execute(query2)
             for i in cursor:
                 id_apprenant = i[0]
-            query3 = f"INSERT INTO apprenants_groupes(id_groupe, id_apprenant, date_creation) VALUES ({id_groupe},{id_apprenant},{date});"
+            query3 = f"""INSERT INTO apprenants_groupes(id_groupe, id_apprenant, date_creation)
+            VALUES ({id_groupe},{id_apprenant},{date});"""
             cursor.execute(query3)
-    
-    #On commit le tout 
+
+    #On commit le tout
     bdd.commit()
     print("Les groupes aléatoires ont étés ajoutés dans la BDD !")
 
